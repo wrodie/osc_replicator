@@ -14,9 +14,10 @@ class OSCRemote:
     def remote_handler(self, address, *args):
         now = time.time()
         # Remove stale clients
-        self.client_tracker = {
-            k: v for k, v in self.client_tracker.items() if now - v < CLIENT_TIMEOUT
-        }
+        # Remove stale clients in-place to preserve shared reference
+        stale = [k for k, v in self.client_tracker.items() if now - v >= CLIENT_TIMEOUT]
+        for k in stale:
+            del self.client_tracker[k]
         logging.debug(f"Received from remote server: {address} {args}")
         logging.debug(f"Forwarding to clients: {list(self.client_tracker.keys())}")
         osc_args = [a for a in args if not isinstance(a, tuple)]
