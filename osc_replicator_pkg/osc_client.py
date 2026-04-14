@@ -16,8 +16,9 @@ class OSCClient:
         if sender and isinstance(sender, tuple) and len(sender) == 2:
             self.clients[sender] = time.time()
             osc_args = args
-            logging.debug(f"Received from client {sender}: {address} {osc_args}")
-            logging.debug(f"Active clients: {list(self.clients.keys())}")
+            #osc_args = osc_args[0] if len(osc_args) == 1 else osc_args
+            logging.debug(f"<-Received from client {sender}: {address} {osc_args}")
+            # logging.debug(f"Active clients: {list(self.clients.keys())}")
         else:
             osc_args = flatten_osc_args(args)
             if (
@@ -32,11 +33,15 @@ class OSCClient:
         if isinstance(address, str) and address.startswith("/"):
             if self.remote_transport:
                 # type: ignore[attr-defined]
+                builder = OscMessageBuilder(address=address)
+                for arg in osc_args:
+                    builder.add_arg(arg)
+                message = builder.build().dgram
                 self.remote_transport.sendto(
-                    OscMessageBuilder(address=address).build().dgram,
+                    message,
                     (self.remote_host, self.remote_port),
                 )
-                logging.debug(f"Forwarded to remote server: {address} {osc_args}")
+                logging.debug(f"<-Forwarded to remote server: {address} {osc_args}")
             else:
                 logging.error("Remote transport not initialized!")
         else:

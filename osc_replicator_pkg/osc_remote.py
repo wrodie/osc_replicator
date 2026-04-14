@@ -18,10 +18,10 @@ class OSCRemote:
         stale = [k for k, v in self.client_tracker.items() if now - v >= CLIENT_TIMEOUT]
         for k in stale:
             del self.client_tracker[k]
-        logging.debug(f"Received from remote server: {address} {args}")
-        logging.debug(f"Forwarding to clients: {list(self.client_tracker.keys())}")
+        logging.debug(f"->Received from remote server: {address} {args}")
+        #logging.debug(f"Forwarding to clients: {list(self.client_tracker.keys())}")
         osc_args = [a for a in args if not isinstance(a, tuple)]
         for ip, port in self.client_tracker:
             client = udp_client.SimpleUDPClient(ip, port)
             client.send_message(address, osc_args)
-            logging.debug(f"Forwarded to client {(ip, port)}: {address} {osc_args}")
+            #logging.debug(f"Forwarded to client {(ip, port)}: {address} {osc_args}")
