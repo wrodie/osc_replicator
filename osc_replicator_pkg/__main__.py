@@ -6,7 +6,7 @@ from osc_replicator_pkg.osc_client import OSCClient
 from osc_replicator_pkg.osc_remote import OSCRemote
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.WARNING,
     format="[%(asctime)s] %(levelname)s: %(message)s",
 )
 
@@ -24,10 +24,15 @@ def main():
     parser.add_argument(
         "--remote-port", type=int, required=True, help="Remote OSC server port"
     )
+    parser.add_argument(
+        "--enable-wing-triplets-response",
+        action="store_true",
+        help="Enable wing triplets response mode for clients"
+    )
     args = parser.parse_args()
 
     client = OSCClient(args.remote_host, args.remote_port)
-    remote = OSCRemote(client.clients)
+    remote = OSCRemote(client.clients, client.wing_triplets_clients)
 
     async def start():
         loop = asyncio.get_running_loop()

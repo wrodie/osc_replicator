@@ -53,13 +53,20 @@ python run_replicator.py --listen-port 9000 --remote-host 127.0.0.1 --remote-por
 - `--listen-port`: UDP port to listen for incoming OSC clients (e.g., 9000)
 - `--remote-host`: Hostname or IP of the remote OSC server
 - `--remote-port`: UDP port of the remote OSC server
+- `--enable-wing-triplets-response`: Enable special handling for wing triplets:
+  - Changes `/*S` messages to `/*s`
+  - Filters triplets to only pass the last value
 
 ### Alternative: Python Module Entry Point
 
 Advanced users can also run the relay directly as a module:
 
 ```sh
+# Standard mode
 python -m osc_replicator_pkg --listen-port 9000 --remote-host 127.0.0.1 --remote-port 8000
+
+# With wing triplets mode enabled
+python -m osc_replicator_pkg --listen-port 9000 --remote-host 127.0.0.1 --remote-port 8000 --enable-wing-triplets-response
 ```
 
 ## Running Tests
@@ -89,6 +96,14 @@ This project uses [Black](https://black.readthedocs.io/) for code formatting.
 ```sh
 black .
 ```
+
+## Wing Triplets Mode
+
+When enabled with `--enable-wing-triplets-response`, the replicator provides special handling for proxying a Behringer Wing Mixer.:
+
+1. Any OSC message send by a client with address `/*S` will be changed to `/*s`
+2. Any message returned by the remote server with triplets of data to a client that has sent `/*S` will only receive the last element
+
 
 ## Project Structure
 

@@ -10,13 +10,17 @@ class OSCClient:
         self.remote_port = remote_port
         self.clients = {}  # (ip, port): last_seen_time
         self.remote_transport = None  # Set by main after remote server is created
+        self.wing_triplets_clients = set()  # Clients that have wing triplets enabled
 
     def client_handler(self, sender, address, *args):
         osc_args = []
         if sender and isinstance(sender, tuple) and len(sender) == 2:
             self.clients[sender] = time.time()
             osc_args = args
-            #osc_args = osc_args[0] if len(osc_args) == 1 else osc_args
+            # Handle wing triplets mode address change
+            if address == "/*S":
+                self.wing_triplets_clients.add(sender)
+                address = "/*s"
             logging.debug(f"<-Received from client {sender}: {address} {osc_args}")
             # logging.debug(f"Active clients: {list(self.clients.keys())}")
         else:
