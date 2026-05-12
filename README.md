@@ -47,7 +47,7 @@ pip install --user -r requirements.txt
 Run the relay from the project root using the wrapper script:
 
 ```sh
-python run_replicator.py --listen-port 9000 --remote-host 127.0.0.1 --remote-port 8000
+python run_replicator.py --listen-port 2223 --remote-host 192.168.201.41 --remote-port 2223 --enable-wing-triplets-response
 ```
 
 - `--listen-port`: UDP port to listen for incoming OSC clients (e.g., 9000)
