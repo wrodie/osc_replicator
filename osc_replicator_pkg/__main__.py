@@ -10,6 +10,7 @@ logging.basicConfig(
     format="[%(asctime)s] %(levelname)s: %(message)s",
 )
 
+
 def main():
     parser = argparse.ArgumentParser(description="OSC Replicator")
     parser.add_argument(
@@ -27,7 +28,7 @@ def main():
     parser.add_argument(
         "--enable-wing-triplets-response",
         action="store_true",
-        help="Enable wing triplets response mode for clients"
+        help="Enable wing triplets response mode for clients",
     )
     args = parser.parse_args()
 
@@ -62,6 +63,7 @@ def main():
         remote_transport.close()
 
     asyncio.run(start())
+
 
 if __name__ == "__main__":
     main()

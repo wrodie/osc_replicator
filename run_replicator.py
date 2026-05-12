@@ -2,6 +2,7 @@ import sys
 import os
 import subprocess
 
+
 def main():
     # Find the python executable (venv or system)
     python = sys.executable
@@ -11,6 +12,7 @@ def main():
     parent = os.path.dirname(os.path.abspath(__file__))
     result = subprocess.run(cmd, cwd=parent)
     sys.exit(result.returncode)
+
 
 if __name__ == "__main__":
     main()
